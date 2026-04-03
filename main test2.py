@@ -235,7 +235,6 @@ def main():
             
             if results.pose_landmarks:
                 # Track the Y-coordinate of the nose (0.0 is top of screen, 1.0 is bottom)
-                nose_y = results.pose_landmarks.landmark[mp_pose.PoseLandmark.NOSE].y
                 eye_y = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_EYE].y + results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_EYE].y / 2
                 
                 # CALIBRATION: Adjust these numbers based on how you sit/stand!
