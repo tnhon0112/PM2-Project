@@ -38,6 +38,9 @@ CLOUD = pygame.image.load(os.path.join("Assets/Other", "Cloud.png"))
 
 BG = pygame.image.load(os.path.join("Assets/Other", "Track.png"))
 
+JUMP_THRESHOLD = 0.4
+DUCK_THRESHOLD = 0.6
+
 
 # --- Classes ---
 class Dinosaur:
@@ -234,19 +237,37 @@ def main():
             results = pose.process(rgb_frame)
             
             if results.pose_landmarks:
-                # Track the Y-coordinate of the nose (0.0 is top of screen, 1.0 is bottom)
-                eye_y = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_EYE].y + results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_EYE].y / 2
-                
-                # CALIBRATION: Adjust these numbers based on how you sit/stand!
-                if eye_y < 0.6:  # If nose is high up -> JUMP
+                # Track average eye height (0.0 is top of frame, 1.0 is bottom).
+                left_eye_y = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_EYE].y
+                right_eye_y = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_EYE].y
+                eye_y = (left_eye_y + right_eye_y) / 2
+
+                # CALIBRATION: Adjust these numbers based on how you sit/stand.
+                if eye_y < JUMP_THRESHOLD:
                     camera_input[pygame.K_UP] = True
-                elif eye_y > 0.4: # If nose is low down -> DUCK
+                elif eye_y > DUCK_THRESHOLD:
                     camera_input[pygame.K_DOWN] = True
 
             # --- Convert OpenCV frame to a Pygame Surface ---
             # Resize the camera frame to a small window (e.g., 200x150 pixels)
             cam_width, cam_height = 200, 150
             small_frame = cv2.resize(rgb_frame, (cam_width, cam_height))
+
+            # Visual guide: neutral zone is between the two lines.
+            jump_line_y = int(JUMP_THRESHOLD * cam_height)
+            duck_line_y = int(DUCK_THRESHOLD * cam_height)
+            cv2.line(small_frame, (0, jump_line_y), (cam_width, jump_line_y), (255, 215, 0), 2)
+            cv2.line(small_frame, (0, duck_line_y), (cam_width, duck_line_y), (255, 215, 0), 2)
+            cv2.putText(
+                small_frame,
+                "Neutral Zone",
+                (8, max(duck_line_y - 8, 12)),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.4,
+                (255, 215, 0),
+                1,
+                cv2.LINE_AA,
+            )
             
             # Rotate and flip image correctly for Pygame (Pygame treats image buffers differently)
             small_frame = cv2.transpose(small_frame)
