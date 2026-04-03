@@ -238,9 +238,9 @@ def main():
                 nose_y = results.pose_landmarks.landmark[mp_pose.PoseLandmark.NOSE].y
                 
                 # CALIBRATION: Adjust these numbers based on how you sit/stand!
-                if nose_y < 0.80:  # If nose is high up -> JUMP
+                if nose_y < 0.6:  # If nose is high up -> JUMP
                     camera_input[pygame.K_UP] = True
-                elif nose_y > 0.75: # If nose is low down -> DUCK
+                elif nose_y > 0.4: # If nose is low down -> DUCK
                     camera_input[pygame.K_DOWN] = True
 
             # --- Convert OpenCV frame to a Pygame Surface ---
