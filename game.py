@@ -12,7 +12,6 @@ from ui import BLACK, WHITE, draw_camera_preview, show_start_ui
 # Initialize Pygame and the camera controller
 pygame.init()
 
-
 camera_controller = CameraController()
 
 # Global Constants ( Adjust how big and how long the screen is )
@@ -22,27 +21,26 @@ SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Motion Controlled Horse Game")
 
 # --- Asset Loading ---
+RUNNING = [ pygame.image.load(os.path.join("Assets/Horse", "run1.png")),
+            pygame.image.load(os.path.join("Assets/Horse", "run2.png")),
+            pygame.image.load(os.path.join("Assets/Horse", "run3.png")),
+            pygame.image.load(os.path.join("Assets/Horse", "run4.png")),
+            pygame.image.load(os.path.join("Assets/Horse", "run5.png")),
+            pygame.image.load(os.path.join("Assets/Horse", "run6.png")),
+            pygame.image.load(os.path.join("Assets/Horse", "run7.png")),
+            pygame.image.load(os.path.join("Assets/Horse", "run8.png")),
+            pygame.image.load(os.path.join("Assets/Horse", "run9.png")),
+            pygame.image.load(os.path.join("Assets/Horse", "run10.png")),
+            pygame.image.load(os.path.join("Assets/Horse", "run11.png")),
+            pygame.image.load(os.path.join("Assets/Horse", "run12.png")),
+            pygame.image.load(os.path.join("Assets/Horse", "run13.png")),
+            pygame.image.load(os.path.join("Assets/Horse", "run14.png")),]
 
-RUNNING = [ pygame.image.load(os.path.join("Assets/Dino", "run1.png")),
-            pygame.image.load(os.path.join("Assets/Dino", "run2.png")),
-            pygame.image.load(os.path.join("Assets/Dino", "run3.png")),
-            pygame.image.load(os.path.join("Assets/Dino", "run4.png")),
-            pygame.image.load(os.path.join("Assets/Dino", "run5.png")),
-            pygame.image.load(os.path.join("Assets/Dino", "run6.png")),
-            pygame.image.load(os.path.join("Assets/Dino", "run7.png")),
-            pygame.image.load(os.path.join("Assets/Dino", "run8.png")),
-            pygame.image.load(os.path.join("Assets/Dino", "run9.png")),
-            pygame.image.load(os.path.join("Assets/Dino", "run10.png")),
-            pygame.image.load(os.path.join("Assets/Dino", "run11.png")),
-            pygame.image.load(os.path.join("Assets/Dino", "run12.png")),
-            pygame.image.load(os.path.join("Assets/Dino", "run13.png")),
-            pygame.image.load(os.path.join("Assets/Dino", "run14.png")),]
-
-JUMPING = [pygame.image.load(os.path.join("Assets/Dino", "run3.png")),
-           pygame.image.load(os.path.join("Assets/Dino", "run4.png")),
-           pygame.image.load(os.path.join("Assets/Dino", "run13.png"))]
-DUCKING = [pygame.image.load(os.path.join("Assets/Dino", "duck1.png")),
-           pygame.image.load(os.path.join("Assets/Dino", "duck2.png"))] 
+JUMPING = [pygame.image.load(os.path.join("Assets/Horse", "run3.png")),
+           pygame.image.load(os.path.join("Assets/Horse", "run4.png")),
+           pygame.image.load(os.path.join("Assets/Horse", "run13.png"))]
+DUCKING = [pygame.image.load(os.path.join("Assets/Horse", "duck1.png")),
+           pygame.image.load(os.path.join("Assets/Horse", "duck2.png"))] 
 
 SMALL_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus1.png")),
                 pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus2.png")),
@@ -70,6 +68,8 @@ class Dinosaur:
     X_POS = 80
     Y_POS = 225
     JUMP_VEL = 8.0
+    RUN_HITBOX = (18, 12, 10)
+    DUCK_HITBOX = (20, 18, 8)
 
     def __init__(self):
         self.duck_img = DUCKING
@@ -139,6 +139,19 @@ class Dinosaur:
     def draw(self, screen):
         screen.blit(self.image, (self.dino_rect.x, self.dino_rect.y))
 
+    def _inset_rect(self, rect, hitbox):
+        inset_x, inset_top, inset_bottom = hitbox
+        return pygame.Rect(
+            rect.x + inset_x,
+            rect.y + inset_top,
+            max(1, rect.width - (inset_x * 2)),
+            max(1, rect.height - inset_top - inset_bottom),
+        )
+
+    def get_collision_rect(self):
+        hitbox = self.DUCK_HITBOX if self.dino_duck and not self.dino_jump else self.RUN_HITBOX
+        return self._inset_rect(self.dino_rect, hitbox)
+
 
 class Cloud:
     def __init__(self):
@@ -158,6 +171,8 @@ class Cloud:
 
 
 class Obstacle:
+    HITBOX = (0, 0, 0)
+
     def __init__(self, image, obstacle_type):
         self.image = image
         self.type = obstacle_type
@@ -175,8 +190,19 @@ class Obstacle:
     def draw(self, screen):
         screen.blit(self.image[self.type], self.rect)
 
+    def get_collision_rect(self):
+        inset_x, inset_top, inset_bottom = self.HITBOX
+        return pygame.Rect(
+            self.rect.x + inset_x,
+            self.rect.y + inset_top,
+            max(1, self.rect.width - (inset_x * 2)),
+            max(1, self.rect.height - inset_top - inset_bottom),
+        )
+
 
 class SmallCactus(Obstacle):
+    HITBOX = (14, 8, 6)
+
     def __init__(self, image):
         self.type = random.randint(0, 2)
         super().__init__(image, self.type)
@@ -184,6 +210,8 @@ class SmallCactus(Obstacle):
 
 
 class LargeCactus(Obstacle):
+    HITBOX = (18, 10, 8)
+
     def __init__(self, image):
         self.type = random.randint(0, 2)
         super().__init__(image, self.type)
@@ -191,6 +219,8 @@ class LargeCactus(Obstacle):
 
 
 class Bird(Obstacle):
+    HITBOX = (12, 10, 10)
+
     def __init__(self, image):
         self.type = 0
         super().__init__(image, self.type)
@@ -268,7 +298,7 @@ def main():
         for obstacle in list(obstacles):
             obstacle.draw(SCREEN)
             obstacle.update()
-            if player.dino_rect.colliderect(obstacle.rect):
+            if player.get_collision_rect().colliderect(obstacle.get_collision_rect()):
                 pygame.time.delay(1000)
                 death_count += 1
                 menu(death_count)
