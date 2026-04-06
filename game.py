@@ -22,11 +22,26 @@ SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Motion Controlled Dino Game")
 
 # --- Asset Loading ---
-RUNNING = [pygame.image.load(os.path.join("Assets/Dino", "DinoRun1.png")),
-           pygame.image.load(os.path.join("Assets/Dino", "DinoRun2.png"))]
-JUMPING = pygame.image.load(os.path.join("Assets/Dino", "DinoJump.png"))
-DUCKING = [pygame.image.load(os.path.join("Assets/Dino", "DinoDuck1.png")),
-           pygame.image.load(os.path.join("Assets/Dino", "DinoDuck2.png"))]
+RUNNING = [ pygame.image.load(os.path.join("Assets/Dino", "run1.png")),
+            pygame.image.load(os.path.join("Assets/Dino", "run2.png")),
+            pygame.image.load(os.path.join("Assets/Dino", "run3.png")),
+            pygame.image.load(os.path.join("Assets/Dino", "run4.png")),
+            pygame.image.load(os.path.join("Assets/Dino", "run5.png")),
+            pygame.image.load(os.path.join("Assets/Dino", "run6.png")),
+            pygame.image.load(os.path.join("Assets/Dino", "run7.png")),
+            pygame.image.load(os.path.join("Assets/Dino", "run8.png")),
+            pygame.image.load(os.path.join("Assets/Dino", "run9.png")),
+            pygame.image.load(os.path.join("Assets/Dino", "run10.png")),
+            pygame.image.load(os.path.join("Assets/Dino", "run11.png")),
+            pygame.image.load(os.path.join("Assets/Dino", "run12.png")),
+            pygame.image.load(os.path.join("Assets/Dino", "run13.png")),
+            pygame.image.load(os.path.join("Assets/Dino", "run14.png")),]
+
+JUMPING = [pygame.image.load(os.path.join("Assets/Dino", "run3.png")),
+           pygame.image.load(os.path.join("Assets/Dino", "run4.png")),
+           pygame.image.load(os.path.join("Assets/Dino", "run13.png")), ]
+DUCKING = [pygame.image.load(os.path.join("Assets/Dino", "duck1.png")),
+           pygame.image.load(os.path.join("Assets/Dino", "duck2.png"))]
 
 SMALL_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus1.png")),
                 pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus2.png")),
@@ -50,9 +65,9 @@ obstacles = []
 
 class Dinosaur:
     X_POS = 80
-    Y_POS = 310
-    Y_POS_DUCK = 340
-    JUMP_VEL = 8.5
+    Y_POS = 225
+    Y_POS_DUCK = 245
+    JUMP_VEL = 8.0
 
     def __init__(self):
         self.duck_img = DUCKING
@@ -78,7 +93,7 @@ class Dinosaur:
         if self.dino_jump:
             self.jump()
 
-        if self.step_index >= 10:
+        if self.step_index >= 28:
             self.step_index = 0
 
         if user_input[pygame.K_UP] and not self.dino_jump:
@@ -95,14 +110,14 @@ class Dinosaur:
             self.dino_jump = False
 
     def duck(self):
-        self.image = self.duck_img[self.step_index // 5]
+        self.image = self.duck_img[self.step_index // 2]
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = self.X_POS
         self.dino_rect.y = self.Y_POS_DUCK
         self.step_index += 1
 
     def run(self):
-        self.image = self.run_img[self.step_index // 5]
+        self.image = self.run_img[self.step_index // 2]
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = self.X_POS
         self.dino_rect.y = self.Y_POS
