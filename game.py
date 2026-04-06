@@ -62,6 +62,8 @@ x_pos_bg = 0
 y_pos_bg = 380
 points = 0
 obstacles = []
+OBSTACLE_SPAWN_DISTANCE_MIN = 280
+OBSTACLE_SPAWN_DISTANCE_MAX = 420
 
 
 class Dinosaur:
@@ -160,7 +162,10 @@ class Obstacle:
         self.image = image
         self.type = obstacle_type
         self.rect = self.image[self.type].get_rect()
-        self.rect.x = SCREEN_WIDTH
+        self.rect.x = SCREEN_WIDTH + random.randint(
+            OBSTACLE_SPAWN_DISTANCE_MIN,
+            OBSTACLE_SPAWN_DISTANCE_MAX,
+        )
 
     def update(self):
         self.rect.x -= game_speed
