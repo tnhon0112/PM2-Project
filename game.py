@@ -40,7 +40,7 @@ RUNNING = [ pygame.image.load(os.path.join("Assets/Dino", "run1.png")),
 
 JUMPING = [pygame.image.load(os.path.join("Assets/Dino", "run3.png")),
            pygame.image.load(os.path.join("Assets/Dino", "run4.png")),
-           pygame.image.load(os.path.join("Assets/Dino", "run13.png")), ]
+           pygame.image.load(os.path.join("Assets/Dino", "run13.png"))]
 DUCKING = [pygame.image.load(os.path.join("Assets/Dino", "duck1.png")),
            pygame.image.load(os.path.join("Assets/Dino", "duck2.png"))] 
 
