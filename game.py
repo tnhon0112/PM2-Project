@@ -19,9 +19,10 @@ camera_controller = CameraController()
 SCREEN_HEIGHT = 600
 SCREEN_WIDTH = 1100
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Motion Controlled Dino Game")
+pygame.display.set_caption("Motion Controlled Horse Game")
 
 # --- Asset Loading ---
+
 RUNNING = [ pygame.image.load(os.path.join("Assets/Dino", "run1.png")),
             pygame.image.load(os.path.join("Assets/Dino", "run2.png")),
             pygame.image.load(os.path.join("Assets/Dino", "run3.png")),
@@ -42,6 +43,12 @@ JUMPING = [pygame.image.load(os.path.join("Assets/Dino", "run3.png")),
            pygame.image.load(os.path.join("Assets/Dino", "run13.png")), ]
 DUCKING = [pygame.image.load(os.path.join("Assets/Dino", "duck1.png")),
            pygame.image.load(os.path.join("Assets/Dino", "duck2.png"))]
+
+RUNNING = [pygame.image.load(os.path.join("Assets/Dino", "DinoRun1.png")),
+           pygame.image.load(os.path.join("Assets/Dino", "DinoRun2.png"))]
+JUMPING = pygame.image.load(os.path.join("Assets/Dino", "DinoJump.png"))
+DUCKING = [pygame.image.load(os.path.join("Assets/Dino", "DinoDuck1.png")),
+           pygame.image.load(os.path.join("Assets/Dino", "DinoDuck2.png"))] 
 
 SMALL_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus1.png")),
                 pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus2.png")),
