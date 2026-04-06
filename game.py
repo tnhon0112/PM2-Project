@@ -111,27 +111,28 @@ class Dinosaur:
             self.dino_jump = False
 
     def duck(self):
-        self.image = self.duck_img[self.step_index // 2]
+        self.image = self.duck_img[(self.step_index // 2) % len(self.duck_img)]
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = self.X_POS
         self.dino_rect.y = self.Y_POS_DUCK
         self.step_index += 1
 
     def run(self):
-        self.image = self.run_img[self.step_index // 2]
+        self.image = self.run_img[(self.step_index // 2) % len(self.run_img)]
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = self.X_POS
         self.dino_rect.y = self.Y_POS
         self.step_index += 1
 
     def jump(self):
-        self.image = self.jump_img
+        self.image = self.jump_img[min(self.step_index // 10, len(self.jump_img) - 1)]
         if self.dino_jump:
             self.dino_rect.y -= self.jump_vel * 4
             self.jump_vel -= 0.8
         if self.jump_vel < -self.JUMP_VEL:
             self.dino_jump = False
             self.jump_vel = self.JUMP_VEL
+            self.step_index = 0
 
     def draw(self, screen):
         screen.blit(self.image, (self.dino_rect.x, self.dino_rect.y))
@@ -194,7 +195,7 @@ class Bird(Obstacle):
     def draw(self, screen):
         if self.index >= 9:
             self.index = 0
-        screen.blit(self.image[self.index // 5], self.rect)
+        screen.blit(self.image[(self.index // 5) % len(self.image)], self.rect)
         self.index += 1
 
 
