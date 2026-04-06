@@ -1,15 +1,21 @@
-import os
+# To get access to the assets folder
+import os 
+# To get random numbers for obstacle generation
 import random
-
+# To create the game window and use the pygame library
 import pygame
-from camera_logic import CameraController
-from ui import BLACK, WHITE, draw_camera_preview, show_start_ui
 
+# Get the camera controller class
+from camera_logic import CameraController
+# Get the UI Functions and constants
+from ui import BLACK, WHITE, draw_camera_preview, show_start_ui
+# Initialize Pygame and the camera controller
 pygame.init()
+
 
 camera_controller = CameraController()
 
-# --- Global Constants ---
+# Global Constants ( Adjust how big and how long the screen is )
 SCREEN_HEIGHT = 600
 SCREEN_WIDTH = 1100
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
