@@ -67,7 +67,6 @@ obstacles = []
 class Dinosaur:
     X_POS = 80
     Y_POS = 225
-    Y_POS_DUCK = 255
     JUMP_VEL = 8.0
 
     def __init__(self):
@@ -85,6 +84,7 @@ class Dinosaur:
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = self.X_POS
         self.dino_rect.y = self.Y_POS
+        self.ground_y = self.Y_POS + self.image.get_height()
 
     def update(self, user_input):
         if self.dino_duck:
@@ -114,14 +114,14 @@ class Dinosaur:
         self.image = self.duck_img[(self.step_index // 2) % len(self.duck_img)]
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = self.X_POS
-        self.dino_rect.y = self.Y_POS_DUCK
+        self.dino_rect.bottom = self.ground_y
         self.step_index += 1
 
     def run(self):
         self.image = self.run_img[(self.step_index // 2) % len(self.run_img)]
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = self.X_POS
-        self.dino_rect.y = self.Y_POS
+        self.dino_rect.bottom = self.ground_y
         self.step_index += 1
 
     def jump(self):
