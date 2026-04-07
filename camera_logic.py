@@ -8,7 +8,7 @@ HIGH_FIVE_MOTION_AREA = 2500
 
 
 class CameraController:
-    def __init__(self, camera_index=0):
+    def __init__(self, camera_index = 0):
         self.cap = cv2.VideoCapture(camera_index)
         self.face_cascade = cv2.CascadeClassifier(
             cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
