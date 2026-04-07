@@ -85,19 +85,12 @@ You should update this section to describe the exact gestures and detection meth
 - Perform the defined gestures to control the dinosaur (for example: raise hand to jump, lower body to duck — replace with your real mapping).
 - Watch the screen and avoid hitting obstacles.
 
-## Future Improvements
 
-You (or others) can extend this project by:
-
-- Improving the UI and animations.
-- Developing a more robust gesture recognition algorithm.
-- Adding a main menu, pause screen, and high score system.
-- Supporting multiple difficulty levels or additional game modes.
 
 ## Author
 
-- Name: _Your Name_
-- Student ID / Class: _Your Info (if needed)_
-- Course: _Course Name_
-- Instructor: _Instructor Name_
-- University: _Your University_
+- Name: Ho Quang Huy
+- Student ID 11525018
+- 
+- Instructor: Bien Minh Tri
+- University:VGU
