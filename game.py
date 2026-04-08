@@ -64,6 +64,7 @@ OBSTACLE_SPAWN_DISTANCE_MIN = 280
 OBSTACLE_SPAWN_DISTANCE_MAX = 420
 
 
+
 class Dinosaur:
     X_POS = 80
     Y_POS = 225
@@ -337,3 +338,4 @@ if __name__ == "__main__":
         menu(death_count=0)
     finally:
         camera_controller.cleanup()
+
