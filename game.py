@@ -305,6 +305,7 @@ def main():
                 menu(death_count)
                 return
 
+
         background()
         cloud.draw(SCREEN)
         cloud.update()
