@@ -40,7 +40,7 @@ class CameraController:
         # Use the largest detected face, which is usually the player closest to the camera
         return max(faces, key=lambda box: box[2] * box[3])
     def detect_high_five(self, gray_frame, face_box):
-        # If no face is found, only update the background model and skip gesture detection
+        # If no face is found, only update the background model and skip gesture detection.
         if face_box is None:
             # `.apply(...)` is OpenCV background-subtractor syntax for updating the motion model.
             self.background_subtractor.apply(gray_frame, learningRate=0.05)
@@ -62,13 +62,9 @@ class CameraController:
         if roi.size == 0:
             return False, mask
 
-        # Narrow the search horizontally to the space around the player's head.
-        left_bound = max(0, x - w)
-        right_bound = min(mask.shape[1], x + (2 * w))
-        side_roi = roi[:, left_bound:right_bound]
-        # Count moving pixels in that region and compare with the gesture threshold.
+        # Count moving pixels in the full region above the face.
         # `cv2.countNonZero(...)` is OpenCV syntax for counting white pixels in the motion area.
-        motion_area = int(cv2.countNonZero(side_roi))
+        motion_area = int(cv2.countNonZero(roi))
         return motion_area > HIGH_FIVE_MOTION_AREA, mask
 
     def build_camera_surface(self, frame_bgr, face_box, face_y, motion_mask):
