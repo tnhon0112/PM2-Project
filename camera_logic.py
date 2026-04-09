@@ -49,7 +49,6 @@ class CameraController:
 
         # Use the largest detected face, which is usually the player closest to the camera.
         return max(faces, key=lambda box: box[2] * box[3])
-
     def detect_high_five(self, gray_frame, face_box):
         # If no face is found, only update the background model and skip gesture detection.
         if face_box is None:
