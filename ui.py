@@ -128,7 +128,6 @@ def show_start_ui(
             # This screen also uses pygame rectangle-drawing syntax for the gesture progress bar.
             draw_text(screen, "High Five To Start", title_font, BLACK, 340, 110)
             draw_text(screen, "Raise a hand near the top of the camera to start the game.", body_font, BLACK, 340, 165)
-            draw_text(screen, "This version uses OpenCV motion, so bigger hand movement works best.", body_font, BLACK, 340, 200)
 
             progress = min(high_five_frames / HIGH_FIVE_HOLD_FRAMES, 1.0)
             pygame.draw.rect(screen, WHITE, (340, 350, 420, 30), border_radius=12)
