@@ -83,7 +83,10 @@ You should update this section to describe the exact gestures and detection meth
 - Make sure your webcam is connected and working.
 - Sit or stand within the camera’s field of view.
 - Perform the defined gestures to control the horse (for example: raise hand to jump, lower body to duck — replace with your real mapping).
+
 - Watch the screen and avoid hitting obstacles.
+
+
 
 
 
