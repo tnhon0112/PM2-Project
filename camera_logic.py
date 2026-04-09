@@ -3,46 +3,37 @@ import pygame
 
 from ui import CAM_HEIGHT, CAM_WIDTH
 
-# Smallest face size the detector should treat as a valid face.
+# Smallest face size the detector should treat as a valid face
 MIN_FACE_SIZE = 45
-# Minimum detected motion area needed to count as a high-five gesture.
+# Minimum detected motion area needed to count as a high-five gesture
 HIGH_FIVE_MOTION_AREA = 2500
 
 
 class CameraController:
     def __init__(self, camera_index = 0):
-        # `cv2.VideoCapture(...)` is OpenCV syntax for opening a camera stream.
+        # syntax for opening a camera stream.
         self.cap = cv2.VideoCapture(camera_index)
-        # `cv2.CascadeClassifier(...)` is OpenCV syntax for loading a face-detection model.
-        self.face_cascade = cv2.CascadeClassifier(
-            cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-        )
-        # `cv2.createBackgroundSubtractorMOG2(...)` is OpenCV syntax for motion detection.
-        self.background_subtractor = cv2.createBackgroundSubtractorMOG2(
-            history=120, varThreshold=35, detectShadows=False
-        )
-        # Store the user's calibrated neutral face height as a normalized value.
+        # syntax for loading a face-detection model (pretrained model)
+        self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+        # syntax for motion detection
+        self.background_subtractor = cv2.createBackgroundSubtractorMOG2(history = 120, varThreshold = 35, detectShadows = False)
+        # default face height
         self.neutral_y = 0.5
-        # Set default thresholds for jump and duck relative to the camera view.
+        # default thresholds for jump and duck relative to the camera view
         self.jump_threshold = 0.38
         self.duck_threshold = 0.62
 
     def update_thresholds(self, new_neutral_y):
-        # Clamp the neutral position so calibration stays in a reasonable range.
+        # Let the neutral zone move up and down with the player's face, but keep it within reason so the game remains playable
         self.neutral_y = max(0.28, min(0.72, new_neutral_y))
-        # Place the jump line a little above neutral.
+        # Place the jump line a little above neutral
         self.jump_threshold = max(0.20, self.neutral_y - 0.12)
-        # Place the duck line a little below neutral.
+        # Place the duck line a little below neutral
         self.duck_threshold = min(0.82, self.neutral_y + 0.12)
 
     def detect_face(self, gray_frame):
         # `.detectMultiScale(...)` is OpenCV face-detection syntax that returns matching rectangles.
-        faces = self.face_cascade.detectMultiScale(
-            gray_frame,
-            scaleFactor=1.1,
-            minNeighbors=5,
-            minSize = (MIN_FACE_SIZE, MIN_FACE_SIZE),
-        )
+        faces = self.face_cascade.detectMultiScale(gray_frame , scaleFactor = 1.1 , minNeighbors = 5, minSize = (MIN_FACE_SIZE, MIN_FACE_SIZE))
         # Return nothing if no face is currently visible.
         if len(faces) == 0:
             return None
