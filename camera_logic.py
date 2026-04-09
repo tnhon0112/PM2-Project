@@ -63,25 +63,27 @@ class CameraController:
             return False, mask
 
         # Count moving pixels in the full region above the face.
+
         motion_area = int(cv2.countNonZero(roi))
         return motion_area > HIGH_FIVE_MOTION_AREA, mask
 
     def build_camera_surface(self, frame_bgr, face_box, face_y, motion_mask):
-        # OpenCV syntax for scaling the camera frame
+        # `cv2.resize(...)` is OpenCV syntax for scaling the camera frame.
         frame = cv2.resize(frame_bgr, (CAM_WIDTH, CAM_HEIGHT))
 
-        # Convert normalized thresholds into actual y-coordinates on screen
+        # Convert normalized thresholds into actual y-coordinates on screen.
         jump_line_y = int(self.jump_threshold * CAM_HEIGHT)
         duck_line_y = int(self.duck_threshold * CAM_HEIGHT)
         zone_top = min(jump_line_y, duck_line_y)
         zone_bottom = max(jump_line_y, duck_line_y)
 
-        # copy the frame 
+        # `frame.copy()` and the OpenCV drawing calls below are used to build the camera overlay.
         overlay = frame.copy()
         cv2.rectangle(overlay, (0, zone_top), (CAM_WIDTH, zone_bottom), (180, 230, 255), -1)
-        #draw on the frame
+    
         frame = cv2.addWeighted(overlay, 0.22, frame, 0.78, 0)
 
+        # `cv2.rectangle(...)` is OpenCV drawing syntax for the face box.
         if face_box is not None:
             x, y, w, h = face_box
             scale_x = CAM_WIDTH / frame_bgr.shape[1]
