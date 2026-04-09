@@ -83,7 +83,7 @@ BG = pygame.image.load(os.path.join("Assets/Other", "Track.png"))
 
 
 
-class Dinosaur:
+class Horse:
     # Class constants that define the player's starting position and hitbox tuning.
     X_POS = 80
     Y_POS = 225
@@ -98,28 +98,28 @@ class Dinosaur:
         self.jump_img = JUMPING
 
         # Booleans that track the current movement state.
-        self.dino_duck = False
-        self.dino_run = True
-        self.dino_jump = False
+        self.horse_duck = False
+        self.horse_run = True
+        self.horse_jump = False
 
         # Variables that track animation progress and jump physics.
         self.step_index = 0
         self.jump_vel = self.JUMP_VEL
         self.image = self.run_img[0]
         # `.get_rect()` is pygame surface syntax that creates a rectangle for positioning and collisions.
-        self.dino_rect = self.image.get_rect()
-        self.dino_rect.x = self.X_POS
-        self.dino_rect.y = self.Y_POS
+        self.horse_rect = self.image.get_rect()
+        self.horse_rect.x = self.X_POS
+        self.horse_rect.y = self.Y_POS
         # Save the bottom y-position so run and duck can snap back to the ground cleanly.
         self.ground_y = self.Y_POS + self.image.get_height()
 
     def update(self, user_input):
         # Run the animation and movement for whichever state is currently active.
-        if self.dino_duck:
+        if self.horse_duck:
             self.duck()
-        if self.dino_run:
+        if self.horse_run:
             self.run()
-        if self.dino_jump:
+        if self.horse_jump:
             self.jump()
 
         # Loop the animation counter so frame selection keeps repeating smoothly.
@@ -128,56 +128,56 @@ class Dinosaur:
 
         # Change state based on keyboard or camera input.
         # `pygame.K_UP` and `pygame.K_DOWN` are pygame key constants.
-        if user_input[pygame.K_UP] and not self.dino_jump:
-            self.dino_duck = False
-            self.dino_run = False
-            self.dino_jump = True
-        elif user_input[pygame.K_DOWN] and not self.dino_jump:
-            self.dino_duck = True
-            self.dino_run = False
-            self.dino_jump = False
-        elif not (self.dino_jump or user_input[pygame.K_DOWN]):
-            self.dino_duck = False
-            self.dino_run = True
-            self.dino_jump = False
+        if user_input[pygame.K_UP] and not self.horse_jump:
+            self.horse_duck = False
+            self.horse_run = False
+            self.horse_jump = True
+        elif user_input[pygame.K_DOWN] and not self.horse_jump:
+            self.horse_duck = True
+            self.horse_run = False
+            self.horse_jump = False
+        elif not (self.horse_jump or user_input[pygame.K_DOWN]):
+            self.horse_duck = False
+            self.horse_run = True
+            self.horse_jump = False
             
 
     def duck(self):
         # Alternate between ducking sprites for a short looping animation.
         self.image = self.duck_img[(self.step_index // 2) % len(self.duck_img)]
-        self.dino_rect = self.image.get_rect()
-        self.dino_rect.x = self.X_POS
+        self.horse_rect = self.image.get_rect()
+        self.horse_rect.x = self.X_POS
         # Keep the horse aligned with the ground even though the sprite height changes.
-        self.dino_rect.bottom = self.ground_y
+        self.horse_rect.bottom = self.ground_y
         self.step_index += 1
 
     def run(self):
         # Choose a running frame based on the animation counter.
         self.image = self.run_img[(self.step_index // 2) % len(self.run_img)]
         # `.get_rect()` is pygame syntax for getting a rectangle that matches the image size.
-        self.dino_rect = self.image.get_rect()
-        self.dino_rect.x = self.X_POS
+        self.horse_rect = self.image.get_rect()
+        self.horse_rect.x = self.X_POS
         # Keep the running sprite aligned with the ground.
-        self.dino_rect.bottom = self.ground_y
+        self.horse_rect.bottom = self.ground_y
         self.step_index += 1
 
     def jump(self):
         # Pick a jump frame based on how far the jump animation has progressed.
         self.image = self.jump_img[min(self.step_index // 10, len(self.jump_img) - 1)]
-        if self.dino_jump:
+        if self.horse_jump:
             # Move the player up or down by changing the pygame rect's y-position.
-            self.dino_rect.y -= self.jump_vel * 4
+            self.horse_rect.y -= self.jump_vel * 4
             # Decrease jump velocity each frame to create gravity-like motion.
             self.jump_vel -= 0.8
         # Reset jump values after the player lands.
         if self.jump_vel < -self.JUMP_VEL:
-            self.dino_jump = False
+            self.horse_jump = False
             self.jump_vel = self.JUMP_VEL
             self.step_index = 0
 
     def draw(self, screen):
         # `screen.blit(...)` is pygame drawing syntax for drawing the player image.
-        screen.blit(self.image, (self.dino_rect.x, self.dino_rect.y))
+        screen.blit(self.image, (self.horse_rect.x, self.horse_rect.y))
 
     def _inset_rect(self, rect, hitbox):
         # Unpack the hitbox tuple into left/right and top/bottom inset values.
@@ -192,8 +192,8 @@ class Dinosaur:
 
     def get_collision_rect(self):
         # Use the duck hitbox when crouching, otherwise use the run hitbox.
-        hitbox = self.DUCK_HITBOX if self.dino_duck and not self.dino_jump else self.RUN_HITBOX
-        return self._inset_rect(self.dino_rect, hitbox)
+        hitbox = self.DUCK_HITBOX if self.horse_duck and not self.horse_jump else self.RUN_HITBOX
+        return self._inset_rect(self.horse_rect, hitbox)
 
 
 class Cloud:
@@ -308,7 +308,7 @@ def main():
     # `pygame.time.Clock()` is pygame syntax for controlling frame timing.
     clock = pygame.time.Clock()
     # Create the main objects used during gameplay.
-    player = Dinosaur()
+    player = Horse()
     cloud = Cloud()
     game_speed = 20
     x_pos_bg = 0

@@ -1,6 +1,6 @@
-# PM2-Project – Dino Game with Camera Control
+# PM2-Project – Horse Game with Camera Control
 
-This project is a simple dinosaur runner game controlled by a **camera** using OpenCV. It aims to provide a more interactive experience where the player can control the character with body movements instead of only using the keyboard.
+This project is a simple horse runner game controlled by a **camera** using OpenCV. It aims to provide a more interactive experience where the player can control the character with body movements instead of only using the keyboard.
 
 ## Demo
 
@@ -8,7 +8,7 @@ _(Add screenshots or GIFs here if you have them, for example from an `Assets/` f
 
 ## Features
 
-- Control the dinosaur character using a webcam and OpenCV.
+- Control the horse character using a webcam and OpenCV.
 - Optionally support keyboard control (if implemented in your code).
 - Simple and lightweight UI suitable for learning and experimentation.
 - Pure Python code that is easy to read, modify, and extend.
@@ -73,7 +73,7 @@ Key files and folders (you can adjust this to match your actual structure):
 - The webcam is opened using OpenCV in `camera_logic.py`.
 - Each frame from the camera is processed to detect the user’s movement or gestures.
 - These detected gestures are converted to game actions (jump, duck, run, etc.) in `game.py`.
-- `ui.py` is responsible for rendering the dinosaur, obstacles, and updating the game every frame.
+- `ui.py` is responsible for rendering the horse, obstacles, and updating the game every frame.
 - The player must avoid obstacles for as long as possible to achieve a higher score.
 
 You should update this section to describe the exact gestures and detection method you implemented.
@@ -82,7 +82,7 @@ You should update this section to describe the exact gestures and detection meth
 
 - Make sure your webcam is connected and working.
 - Sit or stand within the camera’s field of view.
-- Perform the defined gestures to control the dinosaur (for example: raise hand to jump, lower body to duck — replace with your real mapping).
+- Perform the defined gestures to control the horse (for example: raise hand to jump, lower body to duck — replace with your real mapping).
 - Watch the screen and avoid hitting obstacles.
 
 
