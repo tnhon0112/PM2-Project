@@ -79,22 +79,10 @@ class CameraController:
 
         # `frame.copy()` and the OpenCV drawing calls below are used to build the camera overlay.
         overlay = frame.copy()
+        #cv2.rectangle(
         cv2.rectangle(overlay, (0, zone_top), (CAM_WIDTH, zone_bottom), (180, 230, 255), -1)
     
         frame = cv2.addWeighted(overlay, 0.22, frame, 0.78, 0)
-
-        # `cv2.rectangle(...)` is OpenCV drawing syntax for the face box.
-        if face_box is not None:
-            x, y, w, h = face_box
-            scale_x = CAM_WIDTH / frame_bgr.shape[1]
-            scale_y = CAM_HEIGHT / frame_bgr.shape[0]
-            cv2.rectangle(
-                frame,
-                (int(x * scale_x), int(y * scale_y)),
-                (int((x + w) * scale_x), int((y + h) * scale_y)),
-                (40, 160, 70),
-                2,
-            )
 
         # `cv2.line(...)` and `cv2.putText(...)` are OpenCV drawing/text syntax.
         cv2.line(frame, (0, jump_line_y), (CAM_WIDTH, jump_line_y), (0, 215, 255), 2)
