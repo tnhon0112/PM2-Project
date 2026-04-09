@@ -11,11 +11,11 @@ HIGH_FIVE_MOTION_AREA = 2500
 
 class CameraController:
     def __init__(self, camera_index = 0):
-        # `cv2.VideoCapture(index)` is OpenCV syntax for opening a camera stream.
+        # syntax for opening a camera stream.
         self.cap = cv2.VideoCapture(camera_index)
-        # `cv2.CascadeClassifier(xml_file)` is OpenCV syntax for loading a face-detection model.
+        # syntax for loading a face-detection model (pretrained model)
         self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-        # `cv2.createBackgroundSubtractorMOG2(history, varThreshold, detectShadows)` is OpenCV syntax for motion detection.
+        # syntax for motion detection
         self.background_subtractor = cv2.createBackgroundSubtractorMOG2(history = 120, varThreshold = 35, detectShadows = False)
         # default face height
         self.neutral_y = 0.5
@@ -32,7 +32,7 @@ class CameraController:
         self.duck_threshold = min(0.82, self.neutral_y + 0.12)
 
     def detect_face(self, gray_frame):
-        # `cascade.detectMultiScale(image, scaleFactor, minNeighbors, minSize)` is OpenCV syntax that returns `(x, y, w, h)`.
+        # syntax that returns matching rectangles around the face, return (x,y,w,h)
         faces = self.face_cascade.detectMultiScale(gray_frame , scaleFactor = 1.1 , minNeighbors = 5, minSize = (MIN_FACE_SIZE, MIN_FACE_SIZE))
         # Return nothing if no face is currently visible
         if len(faces) == 0:
@@ -42,17 +42,17 @@ class CameraController:
     def detect_high_five(self, gray_frame, face_box):
         # If no face is found, only update the background model and skip gesture detection.
         if face_box is None:
-            # `background_subtractor.apply(image, learningRate)` is OpenCV syntax for updating the motion model.
+            # `.apply(...)` is OpenCV background-subtractor syntax for updating the motion model.
             self.background_subtractor.apply(gray_frame, learningRate=0.05)
             return False, None
 
         # Unpack the face position so we can search for motion above and beside it.
         x, y, w, _ = face_box
-        # `background_subtractor.apply(image, learningRate)` is OpenCV syntax for building a foreground motion mask.
+        # This OpenCV call builds a foreground mask that highlights recent motion.
         mask = self.background_subtractor.apply(gray_frame, learningRate=0.01)
-        # `cv2.threshold(image, thresh, maxval, type)` is OpenCV syntax for binarizing the mask.
+        # `cv2.threshold(...)` is OpenCV image-processing syntax for binarizing the mask.
         _, mask = cv2.threshold(mask, 220, 255, cv2.THRESH_BINARY)
-        # `cv2.medianBlur(image, ksize)` is OpenCV syntax for reducing noise in the image.
+        # `cv2.medianBlur(...)` is OpenCV syntax for reducing noise in the image.
         mask = cv2.medianBlur(mask, 5)
 
         # Focus on the area above the face where a raised hand is expected.
@@ -68,7 +68,7 @@ class CameraController:
         return motion_area > HIGH_FIVE_MOTION_AREA, mask
 
     def build_camera_surface(self, frame_bgr, face_box, face_y, motion_mask):
-        # `cv2.resize(image, dsize)` is OpenCV syntax for scaling the camera frame.
+        # `cv2.resize(...)` is OpenCV syntax for scaling the camera frame.
         frame = cv2.resize(frame_bgr, (CAM_WIDTH, CAM_HEIGHT))
 
         # Convert normalized thresholds into actual y-coordinates on screen.
@@ -77,19 +77,17 @@ class CameraController:
         zone_top = min(jump_line_y, duck_line_y)
         zone_bottom = max(jump_line_y, duck_line_y)
 
-        # `image.copy()` is Python syntax for making a copy before drawing on it.
+        # `frame.copy()` and the OpenCV drawing calls below are used to build the camera overlay.
         overlay = frame.copy()
-        # `cv2.rectangle(image, pt1, pt2, color, thickness)` is OpenCV syntax for drawing a rectangle.
+        #cv2.rectangle(
         cv2.rectangle(overlay, (0, zone_top), (CAM_WIDTH, zone_bottom), (180, 230, 255), -1)
-
-        # `cv2.addWeighted(image1, alpha, image2, beta, gamma)` is OpenCV syntax for blending two images.
+    
         frame = cv2.addWeighted(overlay, 0.22, frame, 0.78, 0)
 
-        # `cv2.line(image, pt1, pt2, color, thickness)` is OpenCV syntax for drawing a line.
+        # `cv2.line(...)` and `cv2.putText(...)` are OpenCV drawing/text syntax.
         cv2.line(frame, (0, jump_line_y), (CAM_WIDTH, jump_line_y), (0, 215, 255), 2)
-        # `cv2.line(image, pt1, pt2, color, thickness)` is OpenCV syntax for drawing a line.
         cv2.line(frame, (0, duck_line_y), (CAM_WIDTH, duck_line_y), (0, 215, 255), 2)
-        # `cv2.putText(image, text, org, fontFace, fontScale, color, thickness, lineType)` is OpenCV syntax for drawing text.
+        #cv2.putText(image, text, org, fontFace, fontScale, color, thickness, lineType)
         cv2.putText(
             frame,
             "Neutral Zone",
@@ -101,25 +99,23 @@ class CameraController:
             cv2.LINE_AA,
         )
 
-        # `cv2.resize(image, dsize)` is OpenCV syntax for scaling the motion mask preview.
+        # `cv2.cvtColor(...)` converts the grayscale mask into a color image for display.
         if motion_mask is not None:
             small_mask = cv2.resize(motion_mask, (CAM_WIDTH // 4, CAM_HEIGHT // 4))
-            # `cv2.cvtColor(image, code)` is OpenCV syntax for converting grayscale to color.
             small_mask_bgr = cv2.cvtColor(small_mask, cv2.COLOR_GRAY2BGR)
             frame[
                 CAM_HEIGHT - small_mask_bgr.shape[0]:CAM_HEIGHT,
                 CAM_WIDTH - small_mask_bgr.shape[1]:CAM_WIDTH,
             ] = small_mask_bgr
 
-        # `cv2.cvtColor(image, code)` is OpenCV syntax for converting the frame from BGR to RGB.
+        # These OpenCV conversions prepare the image, then `pygame.surfarray.make_surface(...)`
+        # is pygame syntax that turns the processed frame into something pygame can draw.
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        # `cv2.transpose(image)` is OpenCV syntax for swapping rows and columns in the frame.
         frame = cv2.transpose(frame)
-        # `pygame.surfarray.make_surface(array)` is pygame syntax for turning an array into a drawable surface.
         return pygame.surfarray.make_surface(frame)
 
     def get_camera_state(self):
-        # `camera.read()` is OpenCV syntax for grabbing the newest frame.
+        # `.read()` is OpenCV camera syntax for grabbing the newest frame.
         ret, frame = self.cap.read()
         # `pygame.K_UP` and `pygame.K_DOWN` are pygame key constants used by the rest of the game.
         camera_input = {pygame.K_UP: False, pygame.K_DOWN: False}
@@ -134,11 +130,10 @@ class CameraController:
                 "camera_ready": False,
             }
 
-        # `cv2.flip(image, flipCode)` is OpenCV syntax for mirroring the camera image.
+        # `cv2.flip(...)` is OpenCV syntax for mirroring the camera image.
         frame = cv2.flip(frame, 1)
-        # `cv2.cvtColor(image, code)` is OpenCV syntax for converting the frame to grayscale.
+        # `cv2.cvtColor(...)` and `cv2.equalizeHist(...)` are OpenCV preprocessing syntax.
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        # `cv2.equalizeHist(image)` is OpenCV syntax for improving grayscale contrast.
         gray = cv2.equalizeHist(gray)
 
         # Detect the player's face in the current frame.
@@ -172,7 +167,7 @@ class CameraController:
         }
 
     def cleanup(self):
-        # `camera.release()` is OpenCV syntax for freeing the webcam device.
+        # `.release()` is OpenCV camera syntax for freeing the webcam device.
         if self.cap.isOpened():
             self.cap.release()
         # `cv2.destroyAllWindows()` is OpenCV syntax for closing any OpenCV windows.
