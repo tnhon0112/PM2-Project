@@ -63,15 +63,14 @@ class CameraController:
             return False, mask
 
         # Count moving pixels in the full region above the face.
-        # `cv2.countNonZero(...)` is OpenCV syntax for counting white pixels in the motion area.
         motion_area = int(cv2.countNonZero(roi))
         return motion_area > HIGH_FIVE_MOTION_AREA, mask
 
     def build_camera_surface(self, frame_bgr, face_box, face_y, motion_mask):
-        # `cv2.resize(...)` is OpenCV syntax for scaling the camera frame.
+        # OpenCV syntax for scaling the camera frame
         frame = cv2.resize(frame_bgr, (CAM_WIDTH, CAM_HEIGHT))
 
-        # Convert normalized thresholds into actual y-coordinates on screen.
+        # Convert normalized thresholds into actual y-coordinates on screen
         jump_line_y = int(self.jump_threshold * CAM_HEIGHT)
         duck_line_y = int(self.duck_threshold * CAM_HEIGHT)
         zone_top = min(jump_line_y, duck_line_y)
