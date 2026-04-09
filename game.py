@@ -1,7 +1,7 @@
 # `os` is Python's standard library for file and folder paths.
 import os 
 # `random` is Python's standard library for choosing random values.
-import random
+import random    
 # `pygame` is the game library used for windows, images, input, fonts, timing, and drawing.
 import pygame
 
@@ -351,11 +351,11 @@ def main():
             if event.type == pygame.QUIT:
                 cleanup_and_exit()
 
-        # Ask the camera controller for the current motion-based input state.
+        #collect data from camera.
         camera_state = camera_controller.get_camera_state()
-        camera_input = camera_state["camera_input"]
+        camera_input = camera_state["camera_input"] 
 
-        # `pygame.key.get_pressed()` is pygame syntax for checking held keyboard keys.
+        # collect data from keyboard.
         keys = pygame.key.get_pressed()
         # Combine camera input with keyboard input so both control methods work.
         camera_input[pygame.K_UP] = camera_input[pygame.K_UP] or keys[pygame.K_UP]
@@ -385,7 +385,9 @@ def main():
             obstacle.draw(SCREEN)
             obstacle.update()
             # This blue rectangle is another debug hitbox outline for the obstacle.
+
             #pygame.draw.rect(SCREEN, (0, 0, 255), obstacle.get_collision_rect(), 2)
+            
             # `.colliderect(...)` is pygame rectangle syntax for collision detection.
             if player.get_collision_rect().colliderect(obstacle.get_collision_rect()):
                 # Pause briefly, count the death, then go back to the menu.
