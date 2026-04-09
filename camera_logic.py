@@ -13,11 +13,11 @@ class CameraController:
     def __init__(self, camera_index = 0):
         #cv2.VideoCapture(index)
         self.cap = cv2.VideoCapture(camera_index)
-        #cv2.CascadeClassifier(xml_file)
+        #cv2.CascadeClassifier(xml_file) detect faces
         self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-        #cv2.createBackgroundSubtractorMOG2(history, varThreshold, detectShadows)
+        #cv2.createBackgroundSubtractorMOG2(history, varThreshold, detectShadows) detect movement
         self.background_subtractor = cv2.createBackgroundSubtractorMOG2(history = 120, varThreshold = 35, detectShadows = False)
-        # default face height
+        # default face height                             how much frame it will take : sensitive (lower is more sensitive)
         self.neutral_y = 0.5
         # default thresholds for jump and duck relative to the camera view
         self.jump_threshold = 0.38
@@ -32,12 +32,13 @@ class CameraController:
         self.duck_threshold = min(0.82, self.neutral_y + 0.12)
 
     def detect_face(self, gray_frame):
-        #cascade.detectMultiScale(image, scaleFactor, minNeighbors, minSize)
+        #cascade.detectMultiScale(image, scaleFactor, minNeighbors, minSize) return X,Y,W,H
         faces = self.face_cascade.detectMultiScale(gray_frame , scaleFactor = 1.1 , minNeighbors = 5, minSize = (MIN_FACE_SIZE, MIN_FACE_SIZE))
         # Return nothing if no face is currently visible
         if len(faces) == 0:
             return None
         # Use the largest detected face, which is usually the player closest to the camera
+        #key = lambda box call the tuple box and get the box[0]
         return max(faces, key=lambda box: box[2] * box[3])
     def detect_high_five(self, gray_frame, face_box):
         # If no face is found, only update the background model and skip gesture detection.
@@ -48,15 +49,15 @@ class CameraController:
 
         # Unpack the face position so we can search for motion above and beside it.
         x, y, w, _ = face_box
-        #background_subtractor.apply(image, learningRate)
+        #background_subtractor.apply(image, learningRate) moving things are white return tuple
         mask = self.background_subtractor.apply(gray_frame, learningRate=0.01)
-        #cv2.threshold(image, thresh, maxval, type)
-        _, mask = cv2.threshold(mask, 220, 255, cv2.THRESH_BINARY)
+        #cv2.threshold(image, thresh, maxval, type) 
+        _, mask = cv2.threshold(mask, 220, 255, cv2.THRESH_BINARY) #seperate the white remove the black
         #cv2.medianBlur(image, ksize)
-        mask = cv2.medianBlur(mask, 5)
+        mask = cv2.medianBlur(mask, 5) #remove noise
 
         # Focus on the area above the face where a raised hand is expected.
-        top_limit = max(0, y - 80)
+        top_limit = max(0, y - 80) #y in facebox
         roi = mask[0:top_limit if top_limit > 0 else 1, :]
         # If there is no usable region above the face, return early.
         if roi.size == 0:
@@ -64,12 +65,14 @@ class CameraController:
 
         # Count moving pixels in the full region above the face.
 
-        motion_area = int(cv2.countNonZero(roi))
+        motion_area = int(cv2.countNonZero(roi)) #count the moving white pixels
         return motion_area > HIGH_FIVE_MOTION_AREA, mask
+    #return true false (if true than high five)
 
     def build_camera_surface(self, frame_bgr, face_box, face_y, motion_mask):
         #cv2.resize(image, dsize)
         frame = cv2.resize(frame_bgr, (CAM_WIDTH, CAM_HEIGHT))
+        #tới đây nha
 
         # Convert normalized thresholds into actual y-coordinates on screen.
         jump_line_y = int(self.jump_threshold * CAM_HEIGHT)
