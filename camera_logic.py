@@ -41,7 +41,7 @@ class CameraController:
             gray_frame,
             scaleFactor=1.1,
             minNeighbors=5,
-            minSize=(MIN_FACE_SIZE, MIN_FACE_SIZE),
+            minSize = (MIN_FACE_SIZE, MIN_FACE_SIZE),
         )
         # Return nothing if no face is currently visible.
         if len(faces) == 0:
