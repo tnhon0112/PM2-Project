@@ -32,7 +32,6 @@ OBSTACLE_SPAWN_DISTANCE_MAX = 420
 
 
 # --- Asset Loading ---
-# `pygame.image.load(...)` is pygame syntax for loading image files into surfaces.
 RUNNING = [ pygame.image.load(os.path.join("Assets/Horse", "run1.png")),
             pygame.image.load(os.path.join("Assets/Horse", "run2.png")),
             pygame.image.load(os.path.join("Assets/Horse", "run3.png")),
