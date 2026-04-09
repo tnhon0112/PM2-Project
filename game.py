@@ -368,7 +368,7 @@ def main():
         player.draw(SCREEN)
         player.update(camera_input)
         # `pygame.draw.rect(...)` here draws a red debug outline around the player's collision box.
-        pygame.draw.rect(SCREEN, (255, 0, 0), player.get_collision_rect(), 2)
+        #pygame.draw.rect(SCREEN, (255, 0, 0), player.get_collision_rect(), 2)
 
         # Only create a new obstacle when there are currently none on screen.
         if len(obstacles) == 0:
@@ -385,7 +385,7 @@ def main():
             obstacle.draw(SCREEN)
             obstacle.update()
             # This blue rectangle is another debug hitbox outline for the obstacle.
-            pygame.draw.rect(SCREEN, (0, 0, 255), obstacle.get_collision_rect(), 2)
+            #pygame.draw.rect(SCREEN, (0, 0, 255), obstacle.get_collision_rect(), 2)
             # `.colliderect(...)` is pygame rectangle syntax for collision detection.
             if player.get_collision_rect().colliderect(obstacle.get_collision_rect()):
                 # Pause briefly, count the death, then go back to the menu.
