@@ -76,13 +76,12 @@ class CameraController:
         zone_top = min(jump_line_y, duck_line_y)
         zone_bottom = max(jump_line_y, duck_line_y)
 
-        # `frame.copy()` and the OpenCV drawing calls below are used to build the camera overlay.
+        # copy the frame 
         overlay = frame.copy()
         cv2.rectangle(overlay, (0, zone_top), (CAM_WIDTH, zone_bottom), (180, 230, 255), -1)
-        # `cv2.addWeighted(...)` is OpenCV syntax for blending the overlay with the frame.
+        #draw on the frame
         frame = cv2.addWeighted(overlay, 0.22, frame, 0.78, 0)
 
-        # `cv2.rectangle(...)` is OpenCV drawing syntax for the face box.
         if face_box is not None:
             x, y, w, h = face_box
             scale_x = CAM_WIDTH / frame_bgr.shape[1]
