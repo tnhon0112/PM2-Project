@@ -98,10 +98,6 @@ class CameraController:
             cv2.LINE_AA,
         )
 
-        # `cv2.circle(...)` is OpenCV drawing syntax for the face-position marker.
-        if face_y is not None:
-            cv2.circle(frame, (CAM_WIDTH - 16, int(face_y * CAM_HEIGHT)), 7, (50, 70, 220), -1)
-
         # `cv2.cvtColor(...)` converts the grayscale mask into a color image for display.
         if motion_mask is not None:
             small_mask = cv2.resize(motion_mask, (CAM_WIDTH // 4, CAM_HEIGHT // 4))
