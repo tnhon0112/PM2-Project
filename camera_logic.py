@@ -3,7 +3,7 @@ import pygame
 
 from ui import CAM_HEIGHT, CAM_WIDTH
 
-# Smallest face size the detector should treat as a valid face
+# Smallest face size the detector should treat as a valid face (Increase to be more precise)
 MIN_FACE_SIZE = 45
 # Minimum detected motion area needed to count as a high-five gesture
 HIGH_FIVE_MOTION_AREA = 2500
@@ -32,16 +32,15 @@ class CameraController:
         self.duck_threshold = min(0.82, self.neutral_y + 0.12)
 
     def detect_face(self, gray_frame):
-        # `.detectMultiScale(...)` is OpenCV face-detection syntax that returns matching rectangles.
+        # syntax that returns matching rectangles around the face, return (x,y,w,h)
         faces = self.face_cascade.detectMultiScale(gray_frame , scaleFactor = 1.1 , minNeighbors = 5, minSize = (MIN_FACE_SIZE, MIN_FACE_SIZE))
-        # Return nothing if no face is currently visible.
+        # Return nothing if no face is currently visible
         if len(faces) == 0:
             return None
-
-        # Use the largest detected face, which is usually the player closest to the camera.
+        # Use the largest detected face, which is usually the player closest to the camera
         return max(faces, key=lambda box: box[2] * box[3])
     def detect_high_five(self, gray_frame, face_box):
-        # If no face is found, only update the background model and skip gesture detection.
+        # If no face is found, only update the background model and skip gesture detection
         if face_box is None:
             # `.apply(...)` is OpenCV background-subtractor syntax for updating the motion model.
             self.background_subtractor.apply(gray_frame, learningRate=0.05)
