@@ -91,9 +91,8 @@ You should update this section to describe the exact gestures and detection meth
 
 
 ## Author
-
-- Name: Ho Quang Huy
-- Student ID 11525018
-- 
+- Name: Hồ Quang Huy : 11525018
+        Trần Thành Nhơn : 11525035
+        Nguyễn Thanh Huy Nhật : 11525017
 - Instructor: Bien Minh Tri
 - University:VGU
