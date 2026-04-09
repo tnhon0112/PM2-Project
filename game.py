@@ -133,6 +133,7 @@ class Dinosaur:
             self.dino_duck = False
             self.dino_run = True
             self.dino_jump = False
+            
 
     def duck(self):
         # Alternate between ducking sprites for a short looping animation.
