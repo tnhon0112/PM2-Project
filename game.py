@@ -23,6 +23,36 @@ SCREEN_WIDTH = 1100
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 # `pygame.display.set_caption(...)` is pygame syntax for naming the window.
 pygame.display.set_caption("Motion Controlled Horse Game")
+GAME_MUSIC_PATH = os.path.join("Assets", "Audio", "horse_sound.mp3")
+music_loaded = False
+
+
+def start_game_music():
+    global music_loaded
+    try:
+        if not pygame.mixer.get_init():
+            pygame.mixer.init()
+        if not music_loaded:
+            if not os.path.exists(GAME_MUSIC_PATH):
+                return
+            pygame.mixer.music.load(GAME_MUSIC_PATH)
+            pygame.mixer.music.set_volume(0.6)
+            music_loaded = True
+        if not pygame.mixer.music.get_busy():
+            # `play(-1)` loops the soundtrack until we stop it.
+            pygame.mixer.music.play(-1)
+    except pygame.error:
+        # Keep the game playable even if audio is unavailable on this device.
+        music_loaded = False
+
+
+def stop_game_music():
+    if not pygame.mixer.get_init():
+        return
+    try:
+        pygame.mixer.music.stop()
+    except pygame.error:
+        pass
 
 
 # Global game-state variables that get reset when a new run starts.
@@ -410,6 +440,7 @@ def main():
 
 def menu(death_count):
     # Show the start/calibration screen, then begin the main game loop.
+    start_game_music()
     show_start_ui(
         SCREEN,
         death_count,
@@ -423,6 +454,7 @@ def menu(death_count):
 
 def cleanup_and_exit():
     # Clean up both the camera resource and pygame before exiting the program.
+    stop_game_music()
     camera_controller.cleanup()
     pygame.quit()
     raise SystemExit
@@ -433,4 +465,5 @@ if __name__ == "__main__":
     try:
         menu(death_count=0)
     finally:
+        stop_game_music()
         camera_controller.cleanup()
