@@ -72,7 +72,7 @@ class CameraController:
     def build_camera_surface(self, frame_bgr, face_box, face_y, motion_mask):
         #cv2.resize(image, dsize)
         frame = cv2.resize(frame_bgr, (CAM_WIDTH, CAM_HEIGHT))
-        #tới đây nha
+    
 
         # Convert normalized thresholds into actual y-coordinates on screen.
         jump_line_y = int(self.jump_threshold * CAM_HEIGHT)
