@@ -144,7 +144,7 @@ class Horse:
 
     def duck(self):
         # Alternate between ducking sprites for a short looping animation.
-        self.image = self.duck_img[(self.step_index // 2) % len(self.duck_img)]
+        self.image = self.duck_img[(self.step_index // 4) % len(self.duck_img)]
         self.horse_rect = self.image.get_rect()
         self.horse_rect.x = self.X_POS
         # Keep the horse aligned with the ground even though the sprite height changes.
@@ -224,8 +224,7 @@ class Obstacle:
     def __init__(self, image, obstacle_type):
         # Save the sprite list and selected sprite index for this obstacle object.
         self.image = image
-        self.type = obstacle_type
-        # `.get_rect()` creates a pygame rectangle for positioning the obstacle.
+        self.type = obstacle_type        # `.get_rect()` creates a pygame rectangle for positioning the obstacle.
         self.rect = self.image[self.type].get_rect()
         # Spawn each obstacle a little off-screen so it scrolls in naturally.
         self.rect.x = SCREEN_WIDTH + random.randint(
