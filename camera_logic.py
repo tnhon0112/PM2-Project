@@ -113,6 +113,7 @@ class CameraController:
                 CAM_HEIGHT - small_mask_bgr.shape[0]:CAM_HEIGHT,
                 CAM_WIDTH - small_mask_bgr.shape[1]:CAM_WIDTH,
             ] = small_mask_bgr
+            #shape[0] is height, 1 is width
 
         #cv2.cvtColor(image, code)
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -142,7 +143,7 @@ class CameraController:
         #cv2.cvtColor(image, code)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         #cv2.equalizeHist(image)
-        gray = cv2.equalizeHist(gray)
+        
 
         # Detect the player's face in the current frame.
         face_box = self.detect_face(gray)
