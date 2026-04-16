@@ -4,10 +4,6 @@ This project is a simple horse runner game controlled by a **camera** using Open
   <img width="1360" height="899" alt="Screenshot 2026-04-09 231522" src="https://github.com/user-attachments/assets/4c9e2e79-6440-4c00-bb64-609d40488d80" />
 
 
-## Demo
-
-_(Add screenshots or GIFs here if you have them, for example from an `Assets/` folder.)_
-
 ## Features
 
 - Control the horse character using a webcam and OpenCV.
